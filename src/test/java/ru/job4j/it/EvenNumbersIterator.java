@@ -20,7 +20,7 @@ public class EvenNumbersIterator implements Iterator<Integer> {
             }
             indexHasNext++;
         }
-        return indexHasNext < data.length;
+        return false;
     }
 
     @Override
@@ -35,6 +35,6 @@ public class EvenNumbersIterator implements Iterator<Integer> {
             }
             indexNext++;
         }
-        return data[indexHasNext++];
+        return data[indexNext];
     }
 }
