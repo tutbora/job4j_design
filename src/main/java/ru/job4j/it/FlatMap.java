@@ -1,9 +1,6 @@
 package ru.job4j.it;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Collections;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlatMap<T> implements Iterator<T> {
@@ -52,5 +49,13 @@ public class FlatMap<T> implements Iterator<T> {
                         .collect(Collectors.toList());
         System.out.println(flat2);
 
+        Collection<Integer> i1 = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+        Collection<Integer> i2 = Arrays.asList(10, 20, 30, 40, 50);
+        Collection<Integer> i3 = new ArrayList<>();
+        Collection<Integer> i4 = Arrays.asList(100, 200, 300, 400);
+
+        Collection<Collection<Integer>> iter = Arrays.asList(i1, i2, i3, i4);
+
+        iter.forEach(col -> col.forEach(System.out::println));
     }
 }
