@@ -28,13 +28,6 @@ public class EvenIterator implements Iterator<Integer> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        while (indexHasNext < numbers.length) {
-            if (numbers[indexNext] % 2 == 0 && numbers[indexNext] != 0) {
-                indexHasNext++;
-                return numbers[indexNext++];
-            }
-            indexNext++;
-        }
-        return numbers[indexNext];
+        return numbers[indexHasNext++];
     }
 }
