@@ -31,10 +31,4 @@ public class AppTest
     public void testApp() {
         assertTrue(true);
     }
-
-    public void testWhenMessage() {
-        String message = "Hello World!";
-        App.main(new String[0]);
-        assertEquals(message, "Hello World!");
-    }
 }
