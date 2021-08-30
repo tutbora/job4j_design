@@ -31,4 +31,8 @@ public class AppTest
     public void testApp() {
         assertTrue(true);
     }
+
+    public void testMessage() {
+        assertTrue("Hello World!", true);
+    }
 }
