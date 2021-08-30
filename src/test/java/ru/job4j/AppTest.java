@@ -32,7 +32,9 @@ public class AppTest
         assertTrue(true);
     }
 
-    public void testMessage() {
-        assertTrue("Hello World!", true);
+    public void testWhenMessage() {
+        String message = "Hello World!";
+        App.main(new String[0]);
+        assertEquals(message, "Hello World!");
     }
 }
