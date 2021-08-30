@@ -5,17 +5,16 @@ import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class EvenIteratorTest {
+public class EvenNumbersIteratorTest {
 
     private Iterator<Integer> it;
 
     @Before
-    public void setIt() {
-        it = new EvenIterator(new int[] {0, 1, 2, 3, 4, 5, 6, 7});
+    public void setUp() {
+        it = new EvenNumbersIterator(new int[] {1, 2, 3, 4, 5, 6, 7});
     }
 
     @Test(expected = NoSuchElementException.class)
