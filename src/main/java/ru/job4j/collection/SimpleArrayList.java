@@ -12,7 +12,7 @@ public class SimpleArrayList<T> implements List<T> {
 
     private int modCount;
 
-    private int expectedModCount, indexIterator;
+    private int expectedModCount, indexIterator, toBeginning;
 
     public SimpleArrayList(int capacity) {
         this.container = (T[]) new Object[capacity];
@@ -23,8 +23,8 @@ public class SimpleArrayList<T> implements List<T> {
         if (size == this.container.length - 1) {
             resize(this.container.length * 2);
         }
-        expectedModCount++;
         this.container[size++] = value;
+        modCount++;
     }
 
     @Override
@@ -32,15 +32,16 @@ public class SimpleArrayList<T> implements List<T> {
         Objects.checkIndex(index, size);
         var oldElement = this.container[index];
         this.container[index] = newValue;
-        expectedModCount++;
+        modCount++;
         return oldElement;
     }
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size--);
+        Objects.checkIndex(index, size);
         var oldElement = this.container[index];
-        if (size <= this.container.length / 3) {
+        /*Variant 1*/
+        if (--size <= this.container.length / 3) {
             var array = (T[]) new Object[this.container.length / 2];
             System.arraycopy(this.container, 0,
                     array, 0, index);
@@ -52,13 +53,14 @@ public class SimpleArrayList<T> implements List<T> {
                     this.container, index, size - index);
             this.container[size] = null;
         }
-//        System.arraycopy(this.container, index + 1,
-//                this.container, index, size - index - 1);
-//        this.container[--size] = null;
-//        if (size <= container.length / 3) {
-//            resize(this.container.length / 2);
-//        }
-        expectedModCount++;
+        /*Variant 2*/
+/*        System.arraycopy(this.container, index + 1,
+                this.container, index, size - index - 1);
+        this.container[--size] = null;
+        if (size <= container.length / 3) {
+            resize(this.container.length / 2);
+        }*/
+        modCount++;
         return oldElement;
     }
 
@@ -75,34 +77,30 @@ public class SimpleArrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
+        expectedModCount = modCount;
         return new Iterator<>() {
 
             @Override
             public boolean hasNext() {
-//                if (modCount != expectedModCount) {
-//                    throw new ConcurrentModificationException("in the hasNext");
-//                }
-                if (expectedModCount > modCount) {
-                    expectedModCount = modCount;
+                if (++toBeginning > 2) {
+                    toBeginning = 2;
                 }
-                if (modCount == expectedModCount) {
-                    modCount = 0;
-                }
-//                    expectedModCount++;
-                if (modCount < size && container[modCount] != null) {
-                    return true;
-                }
-                return false;
+                return indexIterator < size
+                        && container[indexIterator] != null;
             }
 
             @Override
             public T next() {
+                if (expectedModCount != modCount) {
+                    throw new ConcurrentModificationException();
+                }
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                if (modCount != expectedModCount++) {
-                    throw new ConcurrentModificationException("in the next");
+                if (++toBeginning == 2) {
+                    indexIterator = 0;
                 }
+                toBeginning = 0;
                 return container[indexIterator++];
             }
         };
