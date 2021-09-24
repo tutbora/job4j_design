@@ -12,8 +12,6 @@ public class SimpleArrayList<T> implements List<T> {
 
     private int modCount;
 
-    private int expectedModCount, indexIterator, toBeginning;
-
     public SimpleArrayList(int capacity) {
         this.container = (T[]) new Object[capacity];
     }
@@ -21,7 +19,10 @@ public class SimpleArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == this.container.length - 1) {
-            resize(this.container.length * 2);
+            var array = (T[]) new Object[this.container.length * 2];
+            System.arraycopy(this.container, 0,
+                    array, 0, size);
+            this.container = array;
         }
         this.container[size++] = value;
         modCount++;
@@ -32,7 +33,6 @@ public class SimpleArrayList<T> implements List<T> {
         Objects.checkIndex(index, size);
         var oldElement = this.container[index];
         this.container[index] = newValue;
-        modCount++;
         return oldElement;
     }
 
@@ -40,26 +40,9 @@ public class SimpleArrayList<T> implements List<T> {
     public T remove(int index) {
         Objects.checkIndex(index, size);
         var oldElement = this.container[index];
-        /*Variant 1*/
-        if (--size <= this.container.length / 3) {
-            var array = (T[]) new Object[this.container.length / 2];
-            System.arraycopy(this.container, 0,
-                    array, 0, index);
-            System.arraycopy(this.container, index + 1,
-                    array, index, size - index);
-            this.container = array;
-        } else {
-            System.arraycopy(this.container, index + 1,
-                    this.container, index, size - index);
-            this.container[size] = null;
-        }
-        /*Variant 2*/
-/*        System.arraycopy(this.container, index + 1,
+        System.arraycopy(this.container, index + 1,
                 this.container, index, size - index - 1);
         this.container[--size] = null;
-        if (size <= container.length / 3) {
-            resize(this.container.length / 2);
-        }*/
         modCount++;
         return oldElement;
     }
@@ -77,16 +60,17 @@ public class SimpleArrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        expectedModCount = modCount;
+        int expectedModCount = modCount;
+        final int[] indexIterator = {0, 0};
         return new Iterator<>() {
 
             @Override
             public boolean hasNext() {
-                if (++toBeginning > 2) {
-                    toBeginning = 2;
+                indexIterator[1]++;
+                if (indexIterator[1] > 1) {
+                    indexIterator[1] = 2;
                 }
-                return indexIterator < size
-                        && container[indexIterator] != null;
+                return indexIterator[0] < size;
             }
 
             @Override
@@ -97,19 +81,13 @@ public class SimpleArrayList<T> implements List<T> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                if (++toBeginning == 2) {
-                    indexIterator = 0;
+                indexIterator[1]++;
+                if (indexIterator[1] == 2) {
+                    indexIterator[0] = 0;
                 }
-                toBeginning = 0;
-                return container[indexIterator++];
+                indexIterator[1] = 0;
+                return container[indexIterator[0]++];
             }
         };
-    }
-
-    private void resize(int newLength) {
-        var array = (T[]) new Object[newLength];
-        System.arraycopy(this.container, 0,
-                array, 0, size);
-        this.container = array;
     }
 }
