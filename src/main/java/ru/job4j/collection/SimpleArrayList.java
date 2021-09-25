@@ -19,10 +19,7 @@ public class SimpleArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == this.container.length - 1) {
-            var array = (T[]) new Object[this.container.length * 2];
-            System.arraycopy(this.container, 0,
-                    array, 0, size);
-            this.container = array;
+            resize(this.container.length * 2);
         }
         this.container[size++] = value;
         modCount++;
@@ -58,19 +55,21 @@ public class SimpleArrayList<T> implements List<T> {
         return size;
     }
 
+    private int toBeginning;
+    private int indexIterator;
+
     @Override
     public Iterator<T> iterator() {
         int expectedModCount = modCount;
-        final int[] indexIterator = {0, 0};
         return new Iterator<>() {
 
             @Override
             public boolean hasNext() {
-                indexIterator[1]++;
-                if (indexIterator[1] > 1) {
-                    indexIterator[1] = 2;
+                toBeginning++;
+                if (toBeginning > 1) {
+                    toBeginning = 2;
                 }
-                return indexIterator[0] < size;
+                return indexIterator < size;
             }
 
             @Override
@@ -81,13 +80,20 @@ public class SimpleArrayList<T> implements List<T> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                indexIterator[1]++;
-                if (indexIterator[1] == 2) {
-                    indexIterator[0] = 0;
+                toBeginning++;
+                if (toBeginning == 2) {
+                    indexIterator = 0;
                 }
-                indexIterator[1] = 0;
-                return container[indexIterator[0]++];
+                toBeginning = 0;
+                return container[indexIterator++];
             }
         };
+    }
+
+    public void resize(int newLength) {
+        var array = (T[]) new Object[newLength];
+        System.arraycopy(this.container, 0,
+                array, 0, size);
+        this.container = array;
     }
 }
