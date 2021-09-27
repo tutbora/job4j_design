@@ -1,7 +1,6 @@
 package ru.job4j.collection;
 
 import ru.job4j.list.List;
-
 import java.util.*;
 
 public class SimpleArrayList<T> implements List<T> {
@@ -55,13 +54,13 @@ public class SimpleArrayList<T> implements List<T> {
         return size;
     }
 
-    private int toBeginning;
-    private int indexIterator;
-
     @Override
     public Iterator<T> iterator() {
         int expectedModCount = modCount;
         return new Iterator<>() {
+
+            private int indexIterator = 0;
+            private int toBeginning = 0;
 
             @Override
             public boolean hasNext() {
@@ -91,9 +90,6 @@ public class SimpleArrayList<T> implements List<T> {
     }
 
     public void resize(int newLength) {
-        var array = (T[]) new Object[newLength];
-        System.arraycopy(this.container, 0,
-                array, 0, size);
-        this.container = array;
+        this.container = Arrays.copyOf(this.container, newLength);
     }
 }
