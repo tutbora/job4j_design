@@ -1,32 +1,53 @@
 package ru.job4j.collection;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class SimpleLinkedList<E> implements List<E> {
-//    Node<E> head;
-    private E[] containerLd;
+    private Node<E> first;
+    private Node<E> last;
     private int size;
+
+    public SimpleLinkedList() {
+        last = new Node<>(null, first, null);
+        first = new Node<>(null, null, last);
+    }
 
     private static class Node<E> {
         E item;
         Node<E> next;
         Node<E> prev;
 
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.prev = prev;
+        Node(E element, Node<E> prev, Node<E> next) {
             this.item = element;
+            this.prev = prev;
             this.next = next;
         }
-    }
 
-    public SimpleLinkedList() {
-    }
+        public E getItem() {
+            return item;
+        }
 
-    public SimpleLinkedList(Collection<? extends E> col) {
+        public void setItem(E value) {
+            this.item = value;
+        }
 
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> next) {
+            this.next = next;
+        }
+
+        public Node<E> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<E> prev) {
+            this.prev = prev;
+        }
     }
 
     @Override
@@ -49,23 +70,34 @@ public class SimpleLinkedList<E> implements List<E> {
 
     @Override
     public void addFirst(E value) {
-
+        Node<E> temp = first;
+        temp.setItem(value);
+        first = new Node<>(null, null, temp);
+        temp.setPrev(first);
+        size++;
     }
 
     @Override
     public void addLast(E value) {
-
+        Node<E> temp = last;
+        temp.setItem(value);
+        last = new Node<>(null, temp, null);
+        temp.setNext(last);
+        size++;
     }
 
     @Override
     public E get(int index) {
-/*        Objects.checkIndex(index, size);
-        Node<E> node = head;
-        while (node.next != null) {
-            node = head;
+        Objects.checkIndex(index, size);
+        Node<E> target = first.getNext();
+        for (int i = 0; i < index; i++) {
+            target = getNext(target);
         }
-        return node.data;*/
-        return null;
+        return target.getItem();
+    }
+
+    private Node<E> getNext(Node<E> value) {
+        return value.getNext();
     }
 
     @Override
@@ -75,10 +107,21 @@ public class SimpleLinkedList<E> implements List<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return null;
-    }
+        return new Iterator<>() {
+            int count;
 
-    public void resize(int newLength) {
-        this.containerLd = Arrays.copyOf(this.containerLd, newLength);
+            @Override
+            public boolean hasNext() {
+                return count < size;
+            }
+
+            @Override
+            public E next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return get(count++);
+            }
+        };
     }
 }
