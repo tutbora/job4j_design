@@ -52,20 +52,6 @@ public class SimpleLinkedList<E> implements List<E> {
 
     @Override
     public void add(E value) {
-/*        Node<E> node = new Node<>();
-        node.data = value;
-        node.next = null;
-
-        if (head == null) {
-            head = node;
-        } else {
-            Node<E> n = head;
-            while (n.next != null) {
-                n = n.next;
-            }
-            n.next = node;
-        }
-        size++;*/
     }
 
     @Override
