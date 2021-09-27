@@ -18,7 +18,6 @@ public class SimpleLinkedList<E> implements List<E> {
         E item;
         Node<E> next;
         Node<E> prev;
-
         Node(E element, Node<E> prev, Node<E> next) {
             this.item = element;
             this.prev = prev;
