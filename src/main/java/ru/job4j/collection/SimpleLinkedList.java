@@ -10,7 +10,7 @@ public class SimpleLinkedList<E> implements List<E> {
     private int size;
 
     public SimpleLinkedList() {
-        last = new Node<>(null, first, null);
+        last = new Node<>(null, null, null);
         first = new Node<>(null, null, last);
     }
 
@@ -39,10 +39,6 @@ public class SimpleLinkedList<E> implements List<E> {
 
         public void setNext(Node<E> next) {
             this.next = next;
-        }
-
-        public Node<E> getPrev() {
-            return prev;
         }
 
         public void setPrev(Node<E> prev) {
@@ -84,11 +80,6 @@ public class SimpleLinkedList<E> implements List<E> {
 
     private Node<E> getNext(Node<E> value) {
         return value.getNext();
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 
     @Override

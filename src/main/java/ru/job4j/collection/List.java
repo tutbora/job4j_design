@@ -5,5 +5,4 @@ public interface List<E> extends Iterable<E> {
     void addFirst(E value);
     void addLast(E value);
     E get(int index);
-    int size();
 }

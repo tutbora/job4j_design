@@ -12,7 +12,7 @@ public class SimpleLinkedListTest {
     @Test
     public void whenAddAndGet() {
         List<Integer> list = new SimpleLinkedList<>();
-        list.addLast(1);
+        list.addFirst(1);
         list.addLast(2);
         assertThat(list.get(0), Is.is(1));
         assertThat(list.get(1), Is.is(2));
