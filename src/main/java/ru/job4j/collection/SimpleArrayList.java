@@ -60,14 +60,9 @@ public class SimpleArrayList<T> implements List<T> {
         return new Iterator<>() {
 
             private int indexIterator = 0;
-            private int toBeginning = 0;
 
             @Override
             public boolean hasNext() {
-                toBeginning++;
-                if (toBeginning > 1) {
-                    toBeginning = 2;
-                }
                 return indexIterator < size;
             }
 
@@ -79,11 +74,6 @@ public class SimpleArrayList<T> implements List<T> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                toBeginning++;
-                if (toBeginning == 2) {
-                    indexIterator = 0;
-                }
-                toBeginning = 0;
                 return container[indexIterator++];
             }
         };
