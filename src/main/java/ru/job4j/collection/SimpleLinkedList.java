@@ -12,17 +12,15 @@ public class SimpleLinkedList<E> implements List<E> {
     private int modCount;
 
     public SimpleLinkedList() {
-        last = new Node<>(null, null, null);
-        first = new Node<>(null, null, last);
+        last = new Node<>(null, null);
+        first = new Node<>(null, last);
     }
 
     private static class Node<E> {
         E item;
         Node<E> next;
-        Node<E> prev;
 
-        Node(E item, Node<E> prev, Node<E> next) {
-            this.prev = prev;
+        Node(E item, Node<E> next) {
             this.item = item;
             this.next = next;
         }
@@ -42,31 +40,13 @@ public class SimpleLinkedList<E> implements List<E> {
         public void setNext(Node<E> next) {
             this.next = next;
         }
-
-        public void setPrev(Node<E> prev) {
-            this.prev = prev;
-        }
     }
 
     @Override
     public void add(E value) {
-    }
-
-    @Override
-    public void addFirst(E value) {
-        Node<E> temp = first;
-        temp.setItem(value);
-        first = new Node<>(null, null, temp);
-        temp.setPrev(first);
-        size++;
-        modCount++;
-    }
-
-    @Override
-    public void addLast(E value) {
         Node<E> temp = last;
         temp.setItem(value);
-        last = new Node<>(null, temp, null);
+        last = new Node<>(null, temp);
         temp.setNext(last);
         size++;
         modCount++;
@@ -95,27 +75,27 @@ public class SimpleLinkedList<E> implements List<E> {
         int expectedModCount = modCount;
 
         return new Iterator<>() {
-            private int indexIterator;
+            private int countIterator;
+            Node<E> linkItem;
 
             @Override
             public boolean hasNext() {
-                return indexIterator < size;
+                return countIterator < size || linkItem.item == null;
             }
 
             @Override
             public E next() {
-
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                indexIterator++;
-                if (indexIterator % 2 == 0) {
-                    return getNext(first).getNext().getItem();
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
                 }
-                return getItem(first).getNext().getItem();
+                countIterator++;
+                linkItem = first;
+                linkItem.item = linkItem.next.item;
+                linkItem.next = linkItem.next.next;
+                return linkItem.item;
             }
         };
     }
