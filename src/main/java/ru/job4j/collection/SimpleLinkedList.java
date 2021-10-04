@@ -71,12 +71,10 @@ public class SimpleLinkedList<E> implements List<E> {
         int expectedModCount = modCount;
 
         return new Iterator<>() {
-            // first это заглушка => первая нода со значением first.next;
             Node<E> linkItem = first.next;
 
             @Override
             public boolean hasNext() {
-                // last заглушка => проверяем что не дошли до last
                 return linkItem != last;
             }
 
@@ -88,8 +86,6 @@ public class SimpleLinkedList<E> implements List<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                // просто получаем значение
-                // и делаем сдвиг
                 E value = linkItem.item;
                 linkItem = linkItem.next;
                 return value;
