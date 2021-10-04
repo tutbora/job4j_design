@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class SimpleLinkedList<E> implements List<E> {
-    private Node<E> first;
+    private final Node<E> first;
     private Node<E> last;
     private int size;
     private int modCount;
@@ -66,21 +66,18 @@ public class SimpleLinkedList<E> implements List<E> {
         return value.getNext();
     }
 
-    private Node<E> getItem(Node<E> value) {
-        return value;
-    }
-
     @Override
     public Iterator<E> iterator() {
         int expectedModCount = modCount;
 
         return new Iterator<>() {
-            private int countIterator;
-            Node<E> linkItem;
+            // first это заглушка => первая нода со значением first.next;
+            Node<E> linkItem = first.next;
 
             @Override
             public boolean hasNext() {
-                return countIterator < size || linkItem.item == null;
+                // last заглушка => проверяем что не дошли до last
+                return linkItem != last;
             }
 
             @Override
@@ -91,11 +88,11 @@ public class SimpleLinkedList<E> implements List<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                countIterator++;
-                linkItem = first;
-                linkItem.item = linkItem.next.item;
-                linkItem.next = linkItem.next.next;
-                return linkItem.item;
+                // просто получаем значение
+                // и делаем сдвиг
+                E value = linkItem.item;
+                linkItem = linkItem.next;
+                return value;
             }
         };
     }
