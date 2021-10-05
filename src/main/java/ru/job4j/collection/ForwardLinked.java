@@ -25,11 +25,10 @@ public class ForwardLinked<T> implements Iterable<T> {
             head = node;
             return;
         }
-        Node<T> tail = head;
-        while (tail.next != null) {
-            tail = tail.next;
+        while (node.next == null) {
+            node.next = head;
+            head = node;
         }
-        tail.next = node;
     }
 
     public T deleteFirst() {
