@@ -15,11 +15,7 @@ public class SimpleQueue<T> {
                 out.push(in.pop());
             }
         }
-        T temp = null;
-        if (!out.isEmpty()) {
-            temp = out.pop();
-        }
-        return temp;
+        return out.pop();
     }
 
     public void push(T value) {
