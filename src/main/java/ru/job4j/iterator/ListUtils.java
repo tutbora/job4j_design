@@ -4,66 +4,63 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ListUtils {
-
     public static <T> void addBefore(List<T> list, int index, T value) {
         Objects.checkIndex(index, list.size());
-        ListIterator<T> i = list.listIterator();
-        while (i.hasNext()) {
-            if (i.nextIndex() == index) {
-                i.add(value);
+        ListIterator<T> tListIterator = list.listIterator();
+        while (tListIterator.hasNext()) {
+            if (tListIterator.nextIndex() == index) {
+                tListIterator.add(value);
                 break;
             }
-            i.next();
+            tListIterator.next();
         }
     }
 
     public static <T> void addAfter(List<T> list, int index, T value) {
         Objects.checkIndex(index, list.size());
-        ListIterator<T> i = list.listIterator();
-        while (i.hasNext()) {
-            if (i.nextIndex() == index) {
-                i.next();
-                i.add(value);
-                i.previous();
+        ListIterator<T> tListIterator = list.listIterator();
+        while (tListIterator.hasNext()) {
+            if (tListIterator.nextIndex() == index) {
+                tListIterator.next();
+                tListIterator.add(value);
+                tListIterator.previous();
                 break;
             }
-            i.next();
+            tListIterator.next();
         }
     }
 
     public static <T> void removeIf(List<T> list, Predicate<T> filter) {
-        ListIterator<T> i = list.listIterator();
-        T element;
-        while (i.hasNext()) {
-            element = i.next();
-            if (filter.test(element)) {
-                i.remove();
-            }
+        ListIterator<T> tListIterator = list.listIterator();
+        if (tListIterator.hasNext()) {
+            do {
+                if (filter.test(tListIterator.next())) {
+                    tListIterator.remove();
+                }
+            } while (tListIterator.hasNext());
         }
     }
 
     public static <T> void replaceIf(List<T> list, Predicate<T> filter, T value) {
-        ListIterator<T> i = list.listIterator();
-        T element;
-        while (i.hasNext()) {
-            element = i.next();
-            if (filter.test(element)) {
-                i.set(value);
-            }
+        ListIterator<T> tListIterator = list.listIterator();
+        if (tListIterator.hasNext()) {
+            do {
+                if (filter.test(tListIterator.next())) {
+                    tListIterator.set(value);
+                }
+            } while (tListIterator.hasNext());
         }
     }
 
     public static <T> void removeAll(List<T> list, List<T> elements) {
-        ListIterator<T> i = list.listIterator();
-        T elementList;
-        T elementElements;
-        while (i.hasNext()) {
-            ListIterator<T> ii = elements.listIterator();
-            elementList = i.next();
-            while (ii.hasNext()) {
-                elementElements = ii.next();
+        ListIterator<T> tListIterator = list.listIterator();
+        while (tListIterator.hasNext()) {
+            ListIterator<T> iterator = elements.listIterator();
+            T elementList = tListIterator.next();
+            while (iterator.hasNext()) {
+                T elementElements = iterator.next();
                 if (elementList.equals(elementElements)) {
-                    i.remove();
+                    tListIterator.remove();
                     break;
                 }
             }
