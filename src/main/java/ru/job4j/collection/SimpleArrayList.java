@@ -20,6 +20,9 @@ public class SimpleArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        if (size == 0) {
+            this.container = (T[]) new Object[10];
+        }
         if (size == this.container.length - 1) {
             resize(this.container.length * 2);
         }
