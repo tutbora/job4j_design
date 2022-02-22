@@ -7,19 +7,26 @@ public class User {
     private final int children;
     private final Calendar birthday;
 
-    @Override
-    public String toString() {
-        return "Name:" + name
-                + " Children:" + children
-                + " Birthday:" + birthday.get(Calendar.YEAR)
-                + "." + birthday.get(Calendar.MONTH)
-                + "." + birthday.get(Calendar.DAY_OF_MONTH);
-    }
-
     public User(String name, int children, Calendar birthday) {
         this.name = name;
         this.children = children;
         this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        String date = String.format("%04d.%02d.%02d%n",
+                birthday.get(Calendar.YEAR),
+                birthday.get(Calendar.MONTH) + 1,
+                birthday.get(Calendar.DAY_OF_MONTH));
+        return "Name:" + name
+                + " Children:" + children
+                + " Birthday:" + date;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children, birthday);
     }
 
     public static void main(String[] args) {
